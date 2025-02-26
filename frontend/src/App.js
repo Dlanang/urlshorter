@@ -33,28 +33,41 @@ function App() {
     }
   };
 
+  // Fungsi untuk switch ke record history yang dipilih
+  const handleSwitch = (record) => {
+    setResult(record);
+  };
+
   return (
     <div className="min-h-screen bg-gray-100 p-4">
-      <div className="max-w-xl mx-auto bg-white p-6 rounded shadow">
+      <header className="max-w-xl mx-auto bg-white p-6 rounded shadow">
         <h1 className="text-2xl font-bold mb-4">Short Link & QR Code Generator</h1>
         <ShortLinkForm onShorten={handleShorten} />
         {error && <p className="text-red-500 mt-2">{error}</p>}
         {result && <Result data={result} />}
         {history.length > 0 && (
-          <div className="mt-6">
+          <section className="mt-6">
             <h2 className="text-xl font-semibold mb-2">Riwayat Short URL</h2>
             <ul className="list-disc pl-5">
               {history.map((item, index) => (
-                <li key={index}>
-                  <a href={item.shortUrl} target="_blank" rel="noopener noreferrer" className="text-blue-500">
+                <li key={index} className="flex items-center">
+                  <a
+                    href={item.shortUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-blue-500"
+                  >
                     {item.shortUrl}
                   </a> - {item.originalUrl}
+                  <button onClick={() => handleSwitch(item)} className="ml-2 text-green-500 hover:underline">
+                    Switch
+                  </button>
                 </li>
               ))}
             </ul>
-          </div>
+          </section>
         )}
-      </div>
+      </header>
     </div>
   );
 }
