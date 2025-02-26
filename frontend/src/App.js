@@ -3,7 +3,7 @@ import axios from 'axios';
 import ShortLinkForm from './components/ShortLinkForm';
 import Result from './components/Result';
 
-const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:3000';
+const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:4000';
 
 function App() {
   const [result, setResult] = useState(null);
