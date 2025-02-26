@@ -6,12 +6,15 @@ class ShortUrlService {
       if (!originalUrl) {
         return reject(new Error('Original URL harus disediakan.'));
       }
-      TinyURL.shorten(originalUrl, function(res) {
-        // Jika res berupa string yang berisi "Error", kita anggap ada error
-        if (!res || (typeof res === 'string' && res.startsWith('Error'))) {
-          return reject(new Error(`Error shortening URL: ${res}`));
+      TinyURL.shorten(originalUrl, (err, shortUrl) => {
+        console.log('tinyurl callback:', { err, shortUrl });
+        if (err) {
+          return reject(new Error(`Error shortening URL: ${err.message || err}`));
         }
-        resolve(res);
+        if (!shortUrl || shortUrl.startsWith('Error:')) {
+          return reject(new Error(`API Error: ${shortUrl}`));
+        }
+        resolve(shortUrl);
       });
     });
   }
