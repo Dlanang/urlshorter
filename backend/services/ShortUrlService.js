@@ -6,15 +6,15 @@ class ShortUrlService {
       if (!originalUrl) {
         return reject(new Error('Original URL harus disediakan.'));
       }
-      TinyURL.shorten(originalUrl, (err, shortUrl) => {
-        console.log('tinyurl callback:', { err, shortUrl });
-        if (err) {
-          return reject(new Error(`Error shortening URL: ${err.message || err}`));
+      TinyURL.shorten(originalUrl, (result) => {
+        console.log('tinyurl callback:', result);
+        if (!result) {
+          return reject(new Error('Error: tidak ada respons dari TinyURL'));
         }
-        if (!shortUrl || shortUrl.startsWith('Error:')) {
-          return reject(new Error(`API Error: ${shortUrl}`));
+        if (result.startsWith('Error:')) {
+          return reject(new Error(`API Error: ${result}`));
         }
-        resolve(shortUrl);
+        resolve(result);
       });
     });
   }

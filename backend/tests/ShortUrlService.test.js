@@ -1,22 +1,37 @@
-const axios = require('axios');
+// tests/ShortUrlService.test.js
+const TinyURL = require('tinyurl');
 const ShortUrlService = require('../services/ShortUrlService');
-jest.mock('axios');
 
 describe('ShortUrlService', () => {
   let service;
+
   beforeEach(() => {
     service = new ShortUrlService();
   });
 
   it('mengembalikan short URL ketika API merespon dengan sukses', async () => {
-    const fakeShortUrl = 'https://is.gd/abc123';
-    axios.get.mockResolvedValue({ data: fakeShortUrl });
+    const fakeShortUrl = 'https://tinyurl.com/fake123';
+    const originalShorten = TinyURL.shorten;
+    TinyURL.shorten = (url, cb) => {
+      cb(fakeShortUrl);
+    };
+
     const result = await service.shorten('https://contoh.com');
     expect(result).toBe(fakeShortUrl);
+
+    // Kembalikan method asli
+    TinyURL.shorten = originalShorten;
   });
 
   it('melempar error ketika API mengembalikan pesan error', async () => {
-    axios.get.mockResolvedValue({ data: 'Error: Something went wrong' });
+    const originalShorten = TinyURL.shorten;
+    TinyURL.shorten = (url, cb) => {
+      cb('Error: Something went wrong');
+    };
+
     await expect(service.shorten('https://contoh.com')).rejects.toThrow('API Error');
+    
+    // Kembalikan method asli
+    TinyURL.shorten = originalShorten;
   });
 });
