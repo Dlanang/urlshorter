@@ -18,13 +18,29 @@ class UrlController {
 
   async shortenUrl(req, res, next) {
     try {
-      const { url: originalUrl } = req.body;
-      if (!originalUrl || !this.isValidUrl(originalUrl)) {
-        return res.status(400).json({ error: 'URL tidak valid.' });
+      const { url } = req.body;
+
+      // Validasi input URL
+      if (!url) {
+        logger.warn('URL tidak diberikan dalam payload.');
+        return res.status(400).json({ error: 'URL harus disediakan.' });
       }
-      const shortUrl = await this.shortUrlService.shorten(originalUrl);
+      if (!this.isValidUrl(url)) {
+        logger.warn(`URL tidak valid: ${url}`);
+        return res.status(400).json({ error: 'Format URL tidak valid.' });
+      }
+
+      // Logging request masuk (siap mempersingkat URL yang panjang seperti cerita mantan 😉)
+      logger.info(`Menerima permintaan shorten URL untuk: ${url}`);
+
+      // Buat short URL dan QR Code
+      const shortUrl = await this.shortUrlService.shorten(url);
+      logger.info(`Short URL berhasil dibuat: ${shortUrl}`);
+
       const qrDataUrl = await this.qrCodeService.generate(shortUrl);
-      res.json({ originalUrl, shortUrl, qrDataUrl });
+      logger.info(`QR Code berhasil dibuat untuk: ${shortUrl}`);
+
+      res.json({ originalUrl: url, shortUrl, qrDataUrl });
     } catch (error) {
       logger.error(`Error di shortenUrl: ${error.message}`);
       next(error);

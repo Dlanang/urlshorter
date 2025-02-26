@@ -2,6 +2,9 @@ const QRCode = require('qrcode');
 
 class QRCodeService {
   async generate(shortUrl) {
+    if (!shortUrl) {
+      throw new Error('Short URL harus disediakan untuk generate QR Code.');
+    }
     try {
       const options = {
         errorCorrectionLevel: 'H',

@@ -7,7 +7,7 @@ const logger = require('./utils/logger');
 const errorHandler = require('./utils/errorHandler');
 
 const app = express();
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 4000;
 
 // Security middleware
 app.use(helmet());
