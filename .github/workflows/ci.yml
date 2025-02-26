@@ -9,28 +9,30 @@ on:
 jobs:
   backend-tests:
     runs-on: ubuntu-latest
-    working-directory: backend
     steps:
       - uses: actions/checkout@v3
-      - name: Setup Node.js
+      - name: Setup Node.js (Backend)
         uses: actions/setup-node@v3
         with:
           node-version: '16'
       - name: Install Dependencies (Backend)
         run: npm install
+        working-directory: backend
       - name: Run Backend Tests
         run: npm test
+        working-directory: backend
 
   frontend-tests:
     runs-on: ubuntu-latest
-    working-directory: frontend
     steps:
       - uses: actions/checkout@v3
-      - name: Setup Node.js
+      - name: Setup Node.js (Frontend)
         uses: actions/setup-node@v3
         with:
           node-version: '16'
       - name: Install Dependencies (Frontend)
         run: npm install
+        working-directory: frontend
       - name: Run Frontend Tests
         run: npm test
+        working-directory: frontend
